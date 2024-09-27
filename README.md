@@ -42,6 +42,7 @@
 
 ## 사용 언어 및 라이브러리
 - Python
-- PyQt5   
+- PyQt5
+- sqlite3   
 
 ### 잘 만들어 보자
