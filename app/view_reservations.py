@@ -15,8 +15,8 @@ class ViewReservationsPage(QWidget):
 
         # 테이블 위젯 생성
         self.table = QTableWidget()
-        self.table.setColumnCount(6)
-        self.table.setHorizontalHeaderLabels(["예약번호", "예약 날짜", "예약 시간", "환자 이름", "전화번호", "생년월일"])
+        self.table.setColumnCount(5)
+        self.table.setHorizontalHeaderLabels(["예약번호", "환자 이름", "예약 날짜", "예약 시간", "전화번호"])
 
         # 메인 레이아웃에 테이블 위젯 추가
         main_layout.addWidget(self.table)
@@ -36,8 +36,12 @@ class ViewReservationsPage(QWidget):
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
-        # 예약 내역 가져오기 (예약 날짜와 시간 분리)
-        cursor.execute("SELECT id, reservation_date, reservation_time, name, phone, birthdate FROM reservations")
+        # 모든 예약 내역 조회 (patients 테이블과 조인하여 환자 정보 가져오기)
+        cursor.execute('''
+            SELECT reservations.id, patients.name, reservations.reservation_date, reservations.reservation_time, patients.phone
+            FROM reservations
+            JOIN patients ON reservations.patient_id = patients.id
+        ''')
         rows = cursor.fetchall()
 
         # 테이블 위젯에 데이터 추가
